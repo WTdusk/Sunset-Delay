@@ -1,0 +1,36 @@
+MIT License
+
+Copyright (c) 2026 White Tea
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Third-party notice: JUCE is not part of this repository and is not covered by
+the MIT license above. Sunset Delay fetches JUCE 9.0.4 at configure time.
+JUCE is licensed under the AGPLv3 or a commercial JUCE licence:
+
+https://juce.com/juce-7-licence/
+
+A binary built against the AGPL edition of JUCE is a combined work. Distributing
+that binary means complying with the AGPL, including making the corresponding
+source available to the people who receive the binary. A commercial JUCE
+licence is what permits distributing the binary under terms other than the
+AGPL. The MIT grant above applies to the Sunset Delay source in this
+repository. It does not grant any rights in JUCE.

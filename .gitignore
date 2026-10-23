@@ -1,0 +1,14 @@
+build/
+build-*/
+out/
+dist/
+installer/windows/payload/
+installer/windows/output/
+.cache/
+.idea/
+.vscode/
+CMakeUserPresets.json
+compile_commands.json
+*.user
+*.vst3
+.DS_Store

@@ -1,0 +1,49 @@
+﻿Sunset Delay 1.1.0
+White Tea
+
+简体中文
+--------
+仓库里没有单独放一个 .vst3 文件。请用这个安装程序把插件装到电脑上。
+
+下一页可以选择安装文件夹。默认是：
+
+    C:\Program Files\Common Files\VST3
+
+安装完成后，插件在：
+
+    <你选的文件夹>\Sunset Delay.vst3
+
+这是大多数 Windows 宿主（FL Studio、Reaper、Ableton Live、Cubase 等）自动扫描的位置。装完后在宿主里重新扫描插件。
+
+如果改成了别的文件夹，宿主不会自动找到它。请把该文件夹加入宿主的 VST3 扫描路径，然后再扫描。
+
+再下一页可以勾选独立程序。它会装到：
+
+    C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+
+并在开始菜单加入快捷方式。不需要独立程序时，取消勾选即可。
+
+卸载：设置 → 应用 → 已安装的应用 → Sunset Delay → 卸载。
+这会删掉 VST3、独立程序和开始菜单快捷方式。
+
+English
+-------
+This repository does not ship a loose .vst3 file. This installer puts the plugin on disk.
+
+The next page chooses the folder. The default is:
+
+    C:\Program Files\Common Files\VST3
+
+After installation the plugin is:
+
+    <chosen folder>\Sunset Delay.vst3
+
+That default is the folder most Windows hosts scan. Rescan plugins in the host. If you pick a different folder, add it to the host's VST3 search path, then rescan.
+
+The page after that can also install the standalone app at:
+
+    C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+
+with a Start menu shortcut. Clear the checkbox to skip it.
+
+Uninstall from Settings → Apps → Installed apps → Sunset Delay. That removes the VST3 bundle, the standalone app, and the Start menu shortcuts.
