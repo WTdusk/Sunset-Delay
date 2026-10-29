@@ -16,7 +16,7 @@ ManifestDPIAware true
   !define PAYLOAD "payload"
 !endif
 !ifndef OUTFILE
-  !define OUTFILE "SunsetDelay-Setup-1.1.0.exe"
+  !define OUTFILE "SunsetDelay-Setup-1.2.0.exe"
 !endif
 
 Name "Sunset Delay"
@@ -69,7 +69,7 @@ Section "VST3 plugin (required)" SecVst
   SetRegView 64
   WriteRegStr HKLM "Software\White Tea\Sunset Delay" "Vst3Dir" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "DisplayName" "Sunset Delay"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "DisplayVersion" "1.1.0"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "DisplayVersion" "1.2.0"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "Publisher" "White Tea"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "InstallLocation" "$INSTDIR\Sunset Delay.vst3"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "UninstallString" '"$PROGRAMFILES64\White Tea\Sunset Delay\Uninstall.exe"'

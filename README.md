@@ -1,17 +1,17 @@
 # Sunset Delay
 
-Sunset Delay is a guitar delay from White Tea, version 1.1.0. Three engines sit behind one faceplate: tape, analog bucket-brigade, and digital. It is for an electric guitar in front of an amp. Repeats sit behind the pick, and feedback dies out instead of running away.
+Sunset Delay is a guitar delay from White Tea, version 1.2.0. Three engines sit behind one faceplate: tape, analog bucket-brigade, and digital. It is for an electric guitar in front of an amp. Repeats sit behind the pick, and feedback dies out instead of running away.
 
 Load it as an **insert effect** on an audio track. Audio comes in. Dry plus delayed wet goes out. The VST3 category is `Fx|Delay`, so the host keeps the track input connected. The default mix is 28%, and the dry pick stays in front. Mix at zero is the full dry guitar. Bypass passes the dry signal and lets repeats already in the delay line ring out.
 
-Sunset Delay 是 White Tea 的电吉他延迟，版本 1.1.0。面板后面是三套独立引擎：磁带、模拟斗链（bucket-brigade）、数字。它是给音箱前面的电吉他用的。重复落在拨弦后面，反馈会自己衰减，而不是越叠越响。
+Sunset Delay 是 White Tea 的电吉他延迟，版本 1.2.0。面板后面是三套独立引擎：磁带、模拟斗链（bucket-brigade）、数字。它是给音箱前面的电吉他用的。重复落在拨弦后面，反馈会自己衰减，而不是越叠越响。
 
 请把它当作音轨上的**插入效果**来加载。声音进去，出来的是干声加上延迟后的湿声。VST3 类别是 `Fx|Delay`，宿主会保持音轨的音频输入。默认混音 28%，干声仍在前面。混音拧到 0 是完全干声。旁路会放回干声，并让已经写进延迟线的重复自己响完。
 
 Built with [JUCE](https://juce.com) 9.0.4 and CMake. This repository is the source. The Windows release is two files, shipped beside the source rather than inside it:
 
-- `SunsetDelay-Setup-1.1.0.exe` — installer for 64-bit Windows 10 or later
-- `SunsetDelay-VST3-1.1.0.zip` — the `Sunset Delay.vst3` folder, for copying by hand
+- `SunsetDelay-Setup-1.2.0.exe` — installer for 64-bit Windows 10 or later
+- `SunsetDelay-VST3-1.2.0.zip` — the `Sunset Delay.vst3` folder, for copying by hand
 
 The faceplate is soft clay: raised and pressed pills, hero numbers, and one dusty-orange accent, over a muted dusk coast. The painting is embedded in the plugin. A light veil and vignette sit on it. The two middle cards are a thinner clay frost over a soft blur of that same coast, so the hills and water show through while the knobs stay clear. The standalone frame, mute strip, and audio settings use that same clay, Inter, and orange. An edited factory preset keeps its name and adds an amber star.
 
@@ -33,7 +33,7 @@ Two ways to install. Both end at the same bundle. 有两种装法，最后都是
 
 ### 安装包 / Installer
 
-Run `SunsetDelay-Setup-1.1.0.exe`. The wizard asks for a folder. The default is the directory most hosts scan on their own:
+Run `SunsetDelay-Setup-1.2.0.exe`. The wizard asks for a folder. The default is the directory most hosts scan on their own:
 
 ```text
 C:\Program Files\Common Files\VST3
@@ -47,7 +47,7 @@ C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
 
 Clear that checkbox if you only want the plugin.
 
-运行 `SunsetDelay-Setup-1.1.0.exe`。向导会询问文件夹，默认是多数宿主自己会扫描的目录：
+运行 `SunsetDelay-Setup-1.2.0.exe`。向导会询问文件夹，默认是多数宿主自己会扫描的目录：
 
 ```text
 C:\Program Files\Common Files\VST3
@@ -63,7 +63,7 @@ C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
 
 ### 手动复制 / Copy the VST3 folder yourself
 
-Unzip `SunsetDelay-VST3-1.1.0.zip`. The archive contains one folder:
+Unzip `SunsetDelay-VST3-1.2.0.zip`. The archive contains one folder:
 
 ```text
 Sunset Delay.vst3\
@@ -82,7 +82,7 @@ Writing there needs an administrator. If you would rather keep it somewhere else
 
 The plugin is the folder. Copying only the file `Contents\x86_64-win\Sunset Delay.vst3` does not give the host a plugin it can scan.
 
-解压 `SunsetDelay-VST3-1.1.0.zip`。压缩包里只有一个文件夹 `Sunset Delay.vst3`。把**整个文件夹**复制到：
+解压 `SunsetDelay-VST3-1.2.0.zip`。压缩包里只有一个文件夹 `Sunset Delay.vst3`。把**整个文件夹**复制到：
 
 ```text
 C:\Program Files\Common Files\VST3\Sunset Delay.vst3
@@ -138,9 +138,9 @@ cmake --build build --config Release --target GuitarDelay_VST3 GuitarDelay_Stand
 installer\windows\build-windows.cmd
 ```
 
-The installer is written to `build\dist\SunsetDelay-Setup-1.1.0.exe`. The same script writes `build\dist\SunsetDelay-VST3-1.1.0.zip`.
+The installer is written to `build\dist\SunsetDelay-Setup-1.2.0.exe`. The same script writes `build\dist\SunsetDelay-VST3-1.2.0.zip`.
 
-在 Windows 上安装 Visual Studio 2022（「使用 C++ 的桌面开发」）、CMake、Git 和 [Inno Setup 6](https://jrsoftware.org/isdl.php)。在仓库根目录执行上面的命令。安装包在 `build\dist\SunsetDelay-Setup-1.1.0.exe`，手动复制用的压缩包在 `build\dist\SunsetDelay-VST3-1.1.0.zip`。
+在 Windows 上安装 Visual Studio 2022（「使用 C++ 的桌面开发」）、CMake、Git 和 [Inno Setup 6](https://jrsoftware.org/isdl.php)。在仓库根目录执行上面的命令。安装包在 `build\dist\SunsetDelay-Setup-1.2.0.exe`，手动复制用的压缩包在 `build\dist\SunsetDelay-VST3-1.2.0.zip`。
 
 Linux, macOS, the test commands, and the clang-cl cross compile are in [BUILD.md](BUILD.md). JUCE 9 does not build with MinGW. AU is macOS only. Linux 与 macOS 的构建、测试命令，以及用 clang-cl 交叉编译 Windows 安装包的步骤，写在 [BUILD.md](BUILD.md)。JUCE 9 不能用 MinGW。AU 只在 macOS 上构建。
 
@@ -280,13 +280,31 @@ installer/windows/            Windows installer (Inno Setup, NSIS fallback) and 
 cmake/toolchains/             clang-cl cross compile against a Windows SDK
 ```
 
+## CPU / 占用
+
+1.2.0 keeps the same 8× halfband, the same `tanh`, and the same delay behaviour as 1.1.0. The audio thread does less repeated work.
+
+The oversampler still uses the 95-tap Kaiser kernel. Upsampling used to multiply the zeros inserted between samples, and the decimator summed a sample it then threw away. 1.2.0 multiplies only the taps that can be nonzero. When an oversampler's input and output have both sat under about −200 dB for 512 samples, its state is cleared and it sleeps until the next sample. A decaying repeat is still rendered through the audible tail. Analog hiss sits above that floor, so the analog clipper does not sleep while feedback is up.
+
+Steady parameters no longer rebuild their setup on every sample. Biquad coefficients (`sin` / `cos`), the feedback and drive curves (`pow`), and the equal-power mix angles are cached until the value changes. A moving knob still updates every sample, so the glides are unchanged. On the message thread, the 30 Hz timer no longer repaints the bypass switch, and it does not rewrite a knob caption when the displayed number has not changed. Tap, tempo, and the preset star still refresh.
+
+On one Release build, stereo, 256-sample blocks, as a fraction of one core: tape at 48 kHz went from about 28% while playing and 26% in silence to about 6% and 0.5%. Analog while playing went from about 14% to about 3%. Analog silence stays near that playing cost, because the hiss still runs through the clip. Digital was already about 0.4% and is about 0.2%. At 96 kHz, playing tape went from about 56% to about 13%. That is one instance on one machine, not a budget for every host.
+
+1.2.0 仍是和 1.1.0 同一套 8 倍半带、同一个 `tanh`、同一套延迟行为。音频线程少做重复的计算。
+
+过采样用的还是 95 抽头的 Kaiser 核。以前升采样会去乘插在采样之间的零，降采样还会把随后丢掉的那个点加一遍。1.2.0 只乘可能非零的抽头。某一路过采样的输入和输出都低于大约 −200 dB、并持续 512 个采样后，状态清掉并休眠，直到下一个采样到来。听得见的衰减尾音仍会算完。模拟的嘶声高于这个门槛，反馈开着时削波不会休眠。
+
+参数停住以后，不再每个采样重做准备。双二阶系数（`sin` / `cos`）、反馈和驱动曲线（`pow`）、以及等功率混音的角度会缓存到数值真正变化。旋钮在动时仍是每个采样更新，滑音不变。界面线程上，30 Hz 定时器不再重画旁路开关，读数没变时也不重写旋钮文字。点拍、速度和预设星号仍会刷新。
+
+一台机器上的 Release 构建、立体声、256 采样一块、占一个核的比例：48 kHz 磁带从演奏时约 28%、静音时约 26%，降到约 6% 和 0.5%。模拟演奏从约 14% 降到约 3%。模拟静音仍接近演奏时的占用，因为嘶声还要过削波。数字模式本来约 0.4%，现在约 0.2%。96 kHz 下，磁带演奏从约 56% 降到约 13%。这是一个实例的测量，不是每台宿主上的额度。
+
 ## Known limitations / 已知限制
 
 - The release binaries are **Windows x64** only (Windows 10 or later). 32-bit hosts are not supported. Linux and macOS are build-from-source. AU is macOS only. 发布的二进制只面向 **Windows 64 位**（Windows 10 及以上）。不支持 32 位宿主。Linux 和 macOS 需要自行构建。AU 只有 macOS。
 - **YBK Instrument Player is not supported**, and neither is any host that can only load instruments. Sunset Delay is an `Fx|Delay` insert. It will not advertise an Instrument category. **不支持 YBK Instrument Player**，也不支持只能加载乐器的宿主。Sunset Delay 是 `Fx|Delay` 插入效果，不会把自己标成乐器。
 - There is no VST2 build. 没有 VST2 版本。
 - The standalone needs an audio device from its menu. A machine with no ALSA device (`/dev/snd` missing) can still open the window; a DAW is the reliable way to hear it. 独立程序需要在菜单里选择音频设备。没有声卡时窗口仍可打开，听声音以宿主为准。
-- 8× oversampling on tape (two waveshapers) and on the analog clip costs CPU. The compander stays at the base rate. 磁带的两个波形整形和模拟削波使用 8 倍过采样，会占用 CPU。压缩扩展器仍在原采样率运行。
+- 8× oversampling is still the main cost on tape and analog while a note is sounding. 1.2.0 lowers that cost (see CPU / 占用 above) and does not remove the oversamplers or their latency. The compander stays at the base rate. Tape silence is light. Analog silence stays near the playing cost because of the hiss. 磁带和模拟在有声音时，主要占用仍是 8 倍过采样。1.2.0 把这块降下来了（见上一节「CPU / 占用」），但没有拿走过采样，延迟也不变。压缩扩展器仍在原采样率。磁带静音很轻。模拟因为嘶声，空闲时仍接近演奏时的占用。
 - Tap follows the Time knob, 50 ms–1 s. Host sync can still reach 4 s. Tap turns sync off and will not set those longer divisions. 点拍只覆盖时间旋钮的 50 ms–1 秒。宿主同步最长仍可达 4 秒。点拍会关掉同步，也不能设出那些更长的时值。
 - Analog trails carry a hint of hiss. It is part of the brigade, and on a very long feedback setting it is the floor the repeats decay into. 模拟尾音里有一点嘶声，这是斗链的一部分。反馈开得很长时，重复会衰减到这个底噪。
 - The oversamplers add about 1.7 ms of wet latency per waveshaper. Tape pays it twice, so tape echoes land a few milliseconds late. Dry is not delayed, and the plugin reports no latency for PDC. At guitar delays of 50 ms and up, that offset sits inside the echo rather than flamming against the pick. 过采样会给湿声带来大约每个波形整形 1.7 ms 的延迟。磁带有两级，回声会晚几毫秒。干声不延迟，插件也不向宿主报告延迟补偿。在 50 ms 以上的吉他延迟里，这点偏移落在回声内部，不会和拨弦抢在一起。

@@ -428,33 +428,56 @@ void GuitarDelayProcessor::processChunk (juce::AudioBuffer<float>& buffer, int o
     bypassSmooth.setTargetValue (bypassed ? 1.0f : 0.0f);
     mixSmooth.setTargetValue (std::clamp (mixRaw->load(), 0.0f, 1.0f));
 
-    float* send[2] = { sendBuffer.getWritePointer (0), sendBuffer.getWritePointer (1) };
     const float* dry[2] = { nullptr, nullptr };
-
+    float* outs[2] = { nullptr, nullptr };
     for (int channel = 0; channel < channels; ++channel)
-        dry[channel] = buffer.getReadPointer (channel) + offset;
-
-    for (int i = 0; i < count; ++i)
     {
-        const float bypassAmt = bypassSmooth.getNextValue();
-        const float sendGain = 1.0f - bypassAmt;
-        bypassEnv[static_cast<size_t> (i)] = bypassAmt;
-        mixEnv[static_cast<size_t> (i)] = mixSmooth.getNextValue();
-        fadeEnv[static_cast<size_t> (i)] = crossfade.getNextValue();
+        dry[channel] = buffer.getReadPointer (channel) + offset;
+        outs[channel] = buffer.getWritePointer (channel) + offset;
+    }
 
-        for (int channel = 0; channel < channels; ++channel)
+    // A settled bypass of 0 passes the track straight in. The ramp still
+    // multiplies when the trails button or the host bypass is moving.
+    const bool unitySend = ! bypassSmooth.isSmoothing() && bitsEqual (bypassSmooth.getCurrentValue(), 0.0f);
+    float* send[2] = { sendBuffer.getWritePointer (0), sendBuffer.getWritePointer (1) };
+
+    if (unitySend)
+    {
+        for (int i = 0; i < count; ++i)
         {
-            const float sample = dry[channel] != nullptr ? dry[channel][i] : 0.0f;
-            send[channel][i] = sample * sendGain;
+            bypassEnv[static_cast<size_t> (i)] = 0.0f;
+            mixEnv[static_cast<size_t> (i)] = mixSmooth.getNextValue();
+            fadeEnv[static_cast<size_t> (i)] = crossfade.getNextValue();
+        }
+    }
+    else
+    {
+        for (int i = 0; i < count; ++i)
+        {
+            const float bypassAmt = bypassSmooth.getNextValue();
+            const float sendGain = 1.0f - bypassAmt;
+            bypassEnv[static_cast<size_t> (i)] = bypassAmt;
+            mixEnv[static_cast<size_t> (i)] = mixSmooth.getNextValue();
+            fadeEnv[static_cast<size_t> (i)] = crossfade.getNextValue();
+
+            for (int channel = 0; channel < channels; ++channel)
+            {
+                const float sample = dry[channel] != nullptr ? dry[channel][i] : 0.0f;
+                send[channel][i] = sample * sendGain;
+            }
         }
     }
 
     float* wet[2] = { wetBuffer.getWritePointer (0), wetBuffer.getWritePointer (1) };
-    const float* sendIn[2] = { send[0], channels > 1 ? send[1] : send[0] };
+    const float* sendIn[2] = {
+        unitySend ? dry[0] : send[0],
+        channels > 1 ? (unitySend ? dry[1] : send[1]) : (unitySend ? dry[0] : send[0])
+    };
     renderMode (currentMode, sendIn, wet, channels, count, settings, false);
 
     float* tail[2] = { wetTailBuffer.getWritePointer (0), wetTailBuffer.getWritePointer (1) };
-    if (outgoingMode >= 0)
+    const bool cross = outgoingMode >= 0;
+    if (cross)
     {
         silenceBuffer.clear (0, count);
         const float* silent[2] = { silenceBuffer.getReadPointer (0), silenceBuffer.getReadPointer (1) };
@@ -464,26 +487,45 @@ void GuitarDelayProcessor::processChunk (juce::AudioBuffer<float>& buffer, int o
     for (int i = 0; i < count; ++i)
     {
         const float mix = mixEnv[static_cast<size_t> (i)];
-        const float bypassAmt = bypassEnv[static_cast<size_t> (i)];
-        const float fade = outgoingMode >= 0 ? fadeEnv[static_cast<size_t> (i)] : 1.0f;
+        if (! bitsEqual (mix, cachedMix))
+        {
+            cachedMix = mix;
+            const float angle = mix * kHalfPi;
+            cachedDryGain = std::cos (angle);
+            cachedWetGain = std::sin (angle);
+        }
 
-        const float engagedDry = std::cos (mix * kHalfPi);
-        const float wetGain = std::sin (mix * kHalfPi);
-        const float dryGain = engagedDry + (1.0f - engagedDry) * bypassAmt;
-        const float newAmt = std::sin (fade * kHalfPi);
-        const float oldAmt = std::cos (fade * kHalfPi);
+        const float bypassAmt = bypassEnv[static_cast<size_t> (i)];
+        const float dryGain = cachedDryGain + (1.0f - cachedDryGain) * bypassAmt;
+        const float wetGain = cachedWetGain;
+
+        float newAmt = 1.0f;
+        float oldAmt = 0.0f;
+        if (cross)
+        {
+            const float fade = fadeEnv[static_cast<size_t> (i)];
+            if (! bitsEqual (fade, cachedFade))
+            {
+                cachedFade = fade;
+                const float angle = fade * kHalfPi;
+                cachedFadeNew = std::sin (angle);
+                cachedFadeOld = std::cos (angle);
+            }
+            newAmt = cachedFadeNew;
+            oldAmt = cachedFadeOld;
+        }
 
         for (int channel = 0; channel < channels; ++channel)
         {
             float wetSample = wet[channel][i] * newAmt;
-            if (outgoingMode >= 0)
+            if (cross)
                 wetSample += tail[channel][i] * oldAmt;
 
             float sample = dry[channel][i] * dryGain + wetSample * wetGain;
             if (! std::isfinite (sample))
                 sample = 0.0f;
 
-            buffer.getWritePointer (channel)[offset + i] = sample;
+            outs[channel][i] = sample;
         }
     }
 }

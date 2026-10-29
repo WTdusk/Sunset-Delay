@@ -52,6 +52,20 @@ cat > /tmp/host-cxx/clang-cl << 'EOF'
 exec -a clang-cl /usr/bin/clang-18 "$@"
 EOF
 chmod +x /tmp/host-cxx/clang-cl
+# Ubuntu packages these as lld-link-18, llvm-lib-18, llvm-rc-18, llvm-mt-18.
+link_host_tool() {
+    local name="$1"
+    if command -v "${name}" >/dev/null 2>&1; then
+        return 0
+    fi
+    if [[ -x "/usr/bin/${name}-18" ]]; then
+        ln -sfn "/usr/bin/${name}-18" "/tmp/host-cxx/${name}"
+    fi
+}
+link_host_tool lld-link
+link_host_tool llvm-lib
+link_host_tool llvm-rc
+link_host_tool llvm-mt
 export PATH="/tmp/host-cxx:${PATH}"
 
 CMAKE_ARGS=(

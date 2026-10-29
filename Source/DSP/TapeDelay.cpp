@@ -82,8 +82,8 @@ float TapeDelay::Head::read (float delaySamples) const noexcept
     const float size = static_cast<float> (buffer.size());
     const float limit = size - 4.0f;
     const float d = std::clamp (delaySamples, 2.0f, limit);
+    // d is at most one buffer length, so the read cursor wraps at most once.
     float readPos = static_cast<float> (writeIndex) - d;
-    readPos = std::fmod (readPos, size);
     if (readPos < 0.0f)
         readPos += size;
 
@@ -207,7 +207,13 @@ void TapeDelay::process (const float* const* input, float* const* output, int nu
         const float timeDelta = std::clamp (targetMs - currentTimeMs, -maxStepMs, maxStepMs);
         currentTimeMs += timeDelta;
         const float time = currentTimeMs;
-        const float fb = feedbackGain (feedback.getNextValue());
+        const float fbKnob = feedback.getNextValue();
+        if (! bitsEqual (fbKnob, cachedFeedbackKnob))
+        {
+            cachedFeedbackKnob = fbKnob;
+            cachedFeedbackGain = feedbackGain (fbKnob);
+        }
+        const float fb = cachedFeedbackGain;
         const float wide = width.getNextValue();
         const float wowAmt = wow.getNextValue();
         const float flutterAmt = flutter.getNextValue();

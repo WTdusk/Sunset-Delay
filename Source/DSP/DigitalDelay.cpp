@@ -108,8 +108,8 @@ float DigitalDelay::Line::read (float delaySamples) const noexcept
 {
     const float size = static_cast<float> (buffer.size());
     const float d = std::clamp (delaySamples, 2.0f, size - 4.0f);
+    // d is at most one buffer length, so the read cursor wraps at most once.
     float readPos = static_cast<float> (writeIndex) - d;
-    readPos = std::fmod (readPos, size);
     if (readPos < 0.0f)
         readPos += size;
 
@@ -199,7 +199,13 @@ void DigitalDelay::process (const float* const* input, float* const* output, int
 
     for (int i = 0; i < numSamples; ++i)
     {
-        const float fb = feedbackGain (feedback.getNextValue());
+        const float fbKnob = feedback.getNextValue();
+        if (! bitsEqual (fbKnob, cachedFeedbackKnob))
+        {
+            cachedFeedbackKnob = fbKnob;
+            cachedFeedbackGain = feedbackGain (fbKnob);
+        }
+        const float fb = cachedFeedbackGain;
         const float wide = width.getNextValue();
         const float cut = hiCutHz.getNextValue();
         const float diffusion = diffuse.getNextValue();

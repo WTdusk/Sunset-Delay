@@ -47,7 +47,7 @@ if not "%ERR%"=="0" (
     exit /b %ERR%
 )
 
-set "VERSION=1.1.0"
+set "VERSION=1.2.0"
 for /f "tokens=3" %%V in ('findstr /B /C:"project(GuitarDelay VERSION " CMakeLists.txt') do set "VERSION=%%V"
 set "VST3_ZIP=%DIST%\SunsetDelay-VST3-%VERSION%.zip"
 if exist "%VST3_ZIP%" del /f "%VST3_ZIP%"
@@ -59,5 +59,8 @@ if not "%ERR%"=="0" (
     exit /b %ERR%
 )
 echo VST3 zip: %VST3_ZIP%
+set "SUM=%DIST%\SunsetDelay-%VERSION%.sha256"
+powershell -NoProfile -Command "Get-FileHash -Algorithm SHA256 '%DIST%\SunsetDelay-Setup-%VERSION%.exe','%DIST%\SunsetDelay-VST3-%VERSION%.zip' | ForEach-Object { '{0}  {1}' -f $_.Hash.ToLower(), (Split-Path $_.Path -Leaf) } | Set-Content -Encoding ascii '%SUM%'"
+echo Checksums: %SUM%
 popd
 exit /b 0

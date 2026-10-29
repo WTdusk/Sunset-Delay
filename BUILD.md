@@ -1,8 +1,8 @@
 # Building Sunset Delay
 
-Sunset Delay is the product name. The CMake target is still `GuitarDelay`, so the build directories keep that prefix. On disk the plugin is `Sunset Delay.vst3` and the standalone is `Sunset Delay`. Version 1.1.0.
+Sunset Delay is the product name. The CMake target is still `GuitarDelay`, so the build directories keep that prefix. On disk the plugin is `Sunset Delay.vst3` and the standalone is `Sunset Delay`. Version 1.2.0.
 
-产品名是 Sunset Delay。CMake 目标名仍是 `GuitarDelay`，所以构建目录沿用这个前缀。磁盘上的插件是 `Sunset Delay.vst3`，独立程序是 `Sunset Delay`。版本 1.1.0。
+产品名是 Sunset Delay。CMake 目标名仍是 `GuitarDelay`，所以构建目录沿用这个前缀。磁盘上的插件是 `Sunset Delay.vst3`，独立程序是 `Sunset Delay`。版本 1.2.0。
 
 JUCE 9.0.4 is downloaded on the first configure. It is not stored in this repository. Pass `-DFETCHCONTENT_SOURCE_DIR_JUCE=/path/to/JUCE` if you already have that tag checked out.
 
@@ -20,8 +20,8 @@ Outputs:
 
 - VST3: `build\GuitarDelay_artefacts\Release\VST3\Sunset Delay.vst3`
 - Standalone: `build\GuitarDelay_artefacts\Release\Standalone\Sunset Delay.exe`
-- Installer: `build\dist\SunsetDelay-Setup-1.1.0.exe`
-- Manual-copy zip: `build\dist\SunsetDelay-VST3-1.1.0.zip`
+- Installer: `build\dist\SunsetDelay-Setup-1.2.0.exe`
+- Manual-copy zip: `build\dist\SunsetDelay-VST3-1.2.0.zip`
 
 The zip contains one folder, `Sunset Delay.vst3`. That folder is the plugin. `build-windows.cmd` writes it with PowerShell `Compress-Archive` after Inno Setup succeeds.
 
@@ -92,12 +92,12 @@ xwin --accept-license splat --output /tmp/xwin-sdk
 
 That configures `build-windows`, builds the VST3 and the standalone, then runs `installer/windows/stage-and-pack.sh`. The pack script refuses a bundle whose `moduleinfo.json` lists an Instrument subcategory, or whose binary still contains the factory string `Fx|Instrument|Delay`. The category for this plugin is `Fx|Delay`.
 
-The script prefers Inno Setup's `ISCC.exe` (including a Wine install) and falls back to NSIS `makensis`. Both installers ask for a folder, default to `C:\Program Files\Common Files\VST3`, and register an uninstaller. Inno Setup is what `SunsetDelay-Setup-1.1.0.exe` is built with. Compression is `lzma2`.
+The script prefers Inno Setup's `ISCC.exe` (including a Wine install) and falls back to NSIS `makensis`. Both installers ask for a folder, default to `C:\Program Files\Common Files\VST3`, and register an uninstaller. Inno Setup is what `SunsetDelay-Setup-1.2.0.exe` is built with. Compression is `lzma2`.
 
 Results land in `build-windows/dist/`:
 
-- `SunsetDelay-Setup-1.1.0.exe`
-- `SunsetDelay-VST3-1.1.0.zip`
+- `SunsetDelay-Setup-1.2.0.exe`
+- `SunsetDelay-VST3-1.2.0.zip`
 
 ## What not to commit
 
