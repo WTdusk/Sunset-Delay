@@ -20,6 +20,8 @@ public:
     juce::Label title;
     juce::Label value;
     std::function<juce::String (double)> formatter;
+    double shownValue = 0.0;
+    bool valueShown = false;
 };
 
 class ModeSwitch final : public juce::Component
@@ -195,6 +197,10 @@ private:
     int shownMode = -1;
     int shownProgram = -1;
     bool shownDirty = false;
+    bool syncedTimeShown = false;
+    int syncedTimeRounded = -1;
+    int shownBpmTenths = -1;
+    bool shownFreeTempo = false;
     bool tapArmed = false;
     double lastTapAtMs = 0.0;
     double tapFlashUntilMs = 0.0;

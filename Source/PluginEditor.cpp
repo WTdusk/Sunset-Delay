@@ -1008,7 +1008,14 @@ void GuitarDelayEditor::updateReadouts()
     {
         if (knob.formatter == nullptr)
             return;
-        knob.value.setText (knob.formatter (knob.slider.getValue()), juce::dontSendNotification);
+
+        const double value = knob.slider.getValue();
+        if (knob.valueShown && std::abs (value - knob.shownValue) < 1.0e-6)
+            return;
+
+        knob.shownValue = value;
+        knob.valueShown = true;
+        knob.value.setText (knob.formatter (value), juce::dontSendNotification);
     };
 
     paintKnob (feedbackKnob);
@@ -1024,15 +1031,35 @@ void GuitarDelayEditor::updateReadouts()
 
     if (synced)
     {
+        timeKnob.valueShown = false;
+        shownFreeTempo = false;
         const int division = divisionBox.getSelectedItemIndex();
         const float ms = clampDelayMs (delayMsForDivision (delayProcessor.getDisplayedBpm(), division));
-        timeKnob.value.setText (juce::String (juce::roundToInt (ms)) + " ms", juce::dontSendNotification);
-        bpmLabel.setText (juce::String (delayProcessor.getDisplayedBpm(), 1) + " BPM", juce::dontSendNotification);
+        const int rounded = juce::roundToInt (ms);
+        if (! syncedTimeShown || rounded != syncedTimeRounded)
+        {
+            syncedTimeShown = true;
+            syncedTimeRounded = rounded;
+            timeKnob.value.setText (juce::String (rounded) + " ms", juce::dontSendNotification);
+        }
+
+        const int bpmTenths = juce::roundToInt (delayProcessor.getDisplayedBpm() * 10.0f);
+        if (bpmTenths != shownBpmTenths)
+        {
+            shownBpmTenths = bpmTenths;
+            bpmLabel.setText (juce::String (delayProcessor.getDisplayedBpm(), 1) + " BPM", juce::dontSendNotification);
+        }
     }
     else
     {
+        syncedTimeShown = false;
+        shownBpmTenths = -1;
         paintKnob (timeKnob);
-        bpmLabel.setText ("FREE", juce::dontSendNotification);
+        if (! shownFreeTempo)
+        {
+            shownFreeTempo = true;
+            bpmLabel.setText ("FREE", juce::dontSendNotification);
+        }
     }
 
     divisionBox.setAlpha (synced ? 1.0f : 0.45f);
@@ -1140,7 +1167,6 @@ void GuitarDelayEditor::timerCallback()
     }
 
     updateReadouts();
-    stomp.repaint();
 }
 
 void GuitarDelayEditor::refreshPresetLabel()

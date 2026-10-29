@@ -3,6 +3,15 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
+
+#if defined (__SSE2__) || defined (_M_X64) || defined (_M_AMD64)
+ #include <emmintrin.h>
+ #define GUITAR_DELAY_SSE2 1
+#elif defined (__aarch64__) && (defined (__ARM_NEON) || defined (__ARM_NEON__))
+ #include <arm_neon.h>
+ #define GUITAR_DELAY_NEON 1
+#endif
 
 namespace guitar_delay
 {
@@ -25,15 +34,35 @@ inline float flushDenormal (float x) noexcept
     return std::abs (x) < 1.0e-15f ? 0.0f : x;
 }
 
+// Bit compare, so a settled parameter skips a recompute without a float-equality warning.
+inline bool bitsEqual (float a, float b) noexcept
+{
+    return std::memcmp (&a, &b, sizeof (float)) == 0;
+}
+
+inline bool bitsEqual (double a, double b) noexcept
+{
+    return std::memcmp (&a, &b, sizeof (double)) == 0;
+}
+
 // One-pole lowpass. Cheap tape-loss and gentle tone control.
 struct OnePoleLowpass
 {
     float coeff = 1.0f;
     float state = 0.0f;
+    float lastHz = 0.0f;
+    float lastSr = 0.0f;
+    bool coeffValid = false;
 
     void setCutoff (float hz, double sampleRate) noexcept
     {
         const float sr = static_cast<float> (sampleRate);
+        if (coeffValid && bitsEqual (hz, lastHz) && bitsEqual (sr, lastSr))
+            return;
+
+        lastHz = hz;
+        lastSr = sr;
+        coeffValid = true;
         const float fc = std::clamp (hz, 10.0f, sr * 0.49f);
         coeff = 1.0f - std::exp (-kTwoPi * fc / sr);
     }
@@ -92,9 +121,21 @@ struct Biquad
 {
     float b0 = 1.0f, b1 = 0.0f, b2 = 0.0f, a1 = 0.0f, a2 = 0.0f;
     float z1 = 0.0f, z2 = 0.0f;
+    float lastHz = 0.0f;
+    float lastQ = 0.0f;
+    double lastSr = 0.0;
+    bool coeffValid = false;
 
     void setLowpass (float hz, float q, double sampleRate) noexcept
     {
+        if (coeffValid && bitsEqual (hz, lastHz) && bitsEqual (q, lastQ) && bitsEqual (sampleRate, lastSr))
+            return;
+
+        lastHz = hz;
+        lastQ = q;
+        lastSr = sampleRate;
+        coeffValid = true;
+
         const float sr = static_cast<float> (sampleRate);
         const float fc = std::clamp (hz, 20.0f, sr * 0.45f);
         const float w0 = kTwoPi * fc / sr;
@@ -178,73 +219,185 @@ inline constexpr float kHalfband[kHalfbandTaps] = {
     7.6290667063e-06f, -1.7377142452e-05f, -6.5751265785e-06f, 3.9771000862e-06f, 2.0308331073e-06f
 };
 
+// Polyphase views of kHalfband. The upsampler inserts a zero between input
+// samples, so the even and odd outputs only touch even and odd taps. Stored
+// oldest-first so each dot product is a contiguous multiply. The 96th
+// downsample coefficient is padding so the width is a multiple of 4.
+struct alignas (16) HalfbandTables
+{
+    float evenOldest[48] {};
+    float oddOldest[48] {};
+    float downOldest[96] {};
+
+    static constexpr HalfbandTables make() noexcept
+    {
+        HalfbandTables tables {};
+        for (int j = 0; j < 48; ++j)
+            tables.evenOldest[j] = kHalfband[2 * (47 - j)];
+        for (int j = 1; j < 48; ++j)
+            tables.oddOldest[j] = kHalfband[2 * (47 - j) + 1];
+        for (int j = 0; j < kHalfbandTaps; ++j)
+            tables.downOldest[j] = kHalfband[kHalfbandTaps - 1 - j];
+        return tables;
+    }
+};
+
+inline constexpr HalfbandTables kHalfbandTables = HalfbandTables::make();
+
+template <int N>
+inline float dotProduct (const float* samples, const float* coeffs) noexcept
+{
+#if defined (GUITAR_DELAY_SSE2)
+    __m128 acc = _mm_setzero_ps();
+    int i = 0;
+    for (; i + 4 <= N; i += 4)
+        acc = _mm_add_ps (acc, _mm_mul_ps (_mm_loadu_ps (samples + i), _mm_loadu_ps (coeffs + i)));
+
+    const __m128 swapped = _mm_shuffle_ps (acc, acc, 0xB1);
+    acc = _mm_add_ps (acc, swapped);
+    const __m128 high = _mm_movehl_ps (acc, acc);
+    acc = _mm_add_ss (acc, high);
+    float sum = _mm_cvtss_f32 (acc);
+    for (; i < N; ++i)
+        sum += samples[i] * coeffs[i];
+    return sum;
+#elif defined (GUITAR_DELAY_NEON) && defined (__aarch64__)
+    float32x4_t acc = vdupq_n_f32 (0.0f);
+    int i = 0;
+    for (; i + 4 <= N; i += 4)
+        acc = vmlaq_f32 (acc, vld1q_f32 (samples + i), vld1q_f32 (coeffs + i));
+
+    float lanes[4];
+    vst1q_f32 (lanes, acc);
+    float sum = (lanes[0] + lanes[1]) + (lanes[2] + lanes[3]);
+    for (; i < N; ++i)
+        sum += samples[i] * coeffs[i];
+    return sum;
+#else
+    float sum = 0.0f;
+    for (int i = 0; i < N; ++i)
+        sum += samples[i] * coeffs[i];
+    return sum;
+#endif
+}
+
 struct HalfbandStage
 {
-    float up[kHalfbandTaps] {};
-    float down[kHalfbandTaps] {};
-    int upHead = 0;
-    int downHead = 0;
+    // Duplicated rings: a 48- or 95-wide window starting one past the write
+    // cursor is contiguous, including across the wrap.
+    static constexpr int kUpHist = 48;
+    static constexpr int kDownHist = 95;
+
+    alignas (16) float upHist[kUpHist * 2 + 8] {};
+    alignas (16) float downHist[kDownHist * 2 + 16] {};
+    int upPos = 0;
+    int downPos = 0;
 
     void reset() noexcept
     {
-        std::fill (up, up + kHalfbandTaps, 0.0f);
-        std::fill (down, down + kHalfbandTaps, 0.0f);
-        upHead = 0;
-        downHead = 0;
-    }
-
-    static float push (float* hist, int& head, float x) noexcept
-    {
-        hist[head] = x;
-        float y = 0.0f;
-        for (int i = 0; i < kHalfbandTaps; ++i)
-        {
-            int index = head - i;
-            if (index < 0)
-                index += kHalfbandTaps;
-            y += kHalfband[i] * hist[index];
-        }
-        ++head;
-        if (head >= kHalfbandTaps)
-            head = 0;
-        return y;
+        std::fill (upHist, upHist + (kUpHist * 2 + 8), 0.0f);
+        std::fill (downHist, downHist + (kDownHist * 2 + 16), 0.0f);
+        upPos = 0;
+        downPos = 0;
     }
 
     // One base-rate sample in, one out. `fn` runs at 2x the stage input rate.
+    // Same Kaiser kernel as a zero-stuffed convolution: inserted zeros are not
+    // multiplied, and the decimator sample that is thrown away is not summed.
+    // Contiguous dots change only the float rounding of that sum.
     template <typename Fn>
     float process (float x, Fn&& fn) noexcept
     {
-        const float even = push (up, upHead, x) * 2.0f;
-        const float odd = push (up, upHead, 0.0f) * 2.0f;
-        const float kept = push (down, downHead, fn (even));
-        (void) push (down, downHead, fn (odd));
+        upHist[upPos] = x;
+        upHist[upPos + kUpHist] = x;
+        const float* upWindow = upHist + upPos + 1;
+        const float even = dotProduct<48> (upWindow, kHalfbandTables.evenOldest) * 2.0f;
+        const float odd = dotProduct<48> (upWindow, kHalfbandTables.oddOldest) * 2.0f;
+        ++upPos;
+        if (upPos >= kUpHist)
+            upPos = 0;
+
+        const float yEven = fn (even);
+        downHist[downPos] = yEven;
+        downHist[downPos + kDownHist] = yEven;
+        const float kept = dotProduct<96> (downHist + downPos + 1, kHalfbandTables.downOldest);
+        ++downPos;
+        if (downPos >= kDownHist)
+            downPos = 0;
+
+        const float yOdd = fn (odd);
+        downHist[downPos] = yOdd;
+        downHist[downPos + kDownHist] = yOdd;
+        ++downPos;
+        if (downPos >= kDownHist)
+            downPos = 0;
+
         return flushDenormal (kept);
     }
 };
 
 struct Oversampler8x
 {
+    // Longer than the cascaded halfband tails. Past this, a digital-zero input
+    // has already left the filter, so the stages can sleep until audio returns.
+    static constexpr int kQuietSamples = 512;
+    static constexpr float kQuietInput = 1.0e-12f;
+    static constexpr float kQuietOutput = 1.0e-10f;
+
     HalfbandStage outer;
     HalfbandStage mid;
     HalfbandStage inner;
+    int quietSamples = 0;
+    bool quietBypass = false;
 
-    void reset() noexcept
+    void resetFilters() noexcept
     {
         outer.reset();
         mid.reset();
         inner.reset();
     }
 
+    void reset() noexcept
+    {
+        resetFilters();
+        quietSamples = 0;
+        quietBypass = false;
+    }
+
     template <typename Fn>
     float process (float x, Fn&& fn) noexcept
     {
-        return outer.process (x, [&] (float midSample)
+        if (quietBypass)
+        {
+            if (std::abs (x) < kQuietInput)
+                return 0.0f;
+
+            quietBypass = false;
+            quietSamples = 0;
+        }
+
+        const float y = outer.process (x, [&] (float midSample)
         {
             return mid.process (midSample, [&] (float innerSample)
             {
                 return inner.process (innerSample, fn);
             });
         });
+
+        if (std::abs (x) < kQuietInput && std::abs (y) < kQuietOutput)
+        {
+            if (++quietSamples >= kQuietSamples)
+            {
+                resetFilters();
+                quietBypass = true;
+            }
+        }
+        else
+        {
+            quietSamples = 0;
+        }
+
+        return y;
     }
 };
 

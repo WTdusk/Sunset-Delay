@@ -71,6 +71,8 @@ private:
     juce::SmoothedValue<float> wow;
     juce::SmoothedValue<float> flutter;
     juce::SmoothedValue<float> age;
+    float cachedFeedbackKnob = -1.0f;
+    float cachedFeedbackGain = 0.0f;
 };
 
 } // namespace guitar_delay

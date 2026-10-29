@@ -115,6 +115,12 @@ private:
     juce::SmoothedValue<float> mixSmooth;
     juce::SmoothedValue<float> bypassSmooth;
     juce::SmoothedValue<float> crossfade;
+    float cachedMix = -1.0f;
+    float cachedDryGain = 1.0f;
+    float cachedWetGain = 0.0f;
+    float cachedFade = -1.0f;
+    float cachedFadeNew = 1.0f;
+    float cachedFadeOld = 0.0f;
 
     double sampleRate = 0.0;
     int blockCapacity = 0;

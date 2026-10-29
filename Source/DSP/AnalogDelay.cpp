@@ -143,11 +143,21 @@ void AnalogDelay::process (const float* const* input, float* const* output, int 
         currentTimeMs += timeDelta;
         const float time = std::max (currentTimeMs, minDelayMs);
         const float fbKnob = feedback.getNextValue();
-        const float fb = feedbackGain (fbKnob);
+        if (! bitsEqual (fbKnob, cachedFeedbackKnob))
+        {
+            cachedFeedbackKnob = fbKnob;
+            cachedFeedbackGain = feedbackGain (fbKnob);
+        }
+        const float fb = cachedFeedbackGain;
         const float wide = width.getNextValue();
         const float toneAmt = tone.getNextValue();
         const float driveAmt = drive.getNextValue();
-        const float driveGain = std::pow (10.0f, driveAmt * 16.0f / 20.0f);
+        if (! bitsEqual (driveAmt, cachedDrive))
+        {
+            cachedDrive = driveAmt;
+            cachedDriveGain = std::pow (10.0f, driveAmt * 16.0f / 20.0f);
+        }
+        const float driveGain = cachedDriveGain;
         const float compAmount = 1.2f + driveAmt * 3.5f;
 
         const float common = commonNoise.nextBipolar();

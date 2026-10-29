@@ -68,6 +68,10 @@ private:
     juce::SmoothedValue<float> width;
     juce::SmoothedValue<float> tone;
     juce::SmoothedValue<float> drive;
+    float cachedFeedbackKnob = -1.0f;
+    float cachedFeedbackGain = 0.0f;
+    float cachedDrive = -1.0f;
+    float cachedDriveGain = 1.0f;
 };
 
 } // namespace guitar_delay

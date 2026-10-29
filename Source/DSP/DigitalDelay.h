@@ -73,6 +73,8 @@ private:
     juce::SmoothedValue<float> width;
     juce::SmoothedValue<float> hiCutHz;
     juce::SmoothedValue<float> diffuse;
+    float cachedFeedbackKnob = -1.0f;
+    float cachedFeedbackGain = 0.0f;
 };
 
 } // namespace guitar_delay
