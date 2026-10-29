@@ -454,7 +454,7 @@ public:
     }
 
     const juce::String getApplicationName() override { return "Sunset Delay"; }
-    const juce::String getApplicationVersion() override { return "1.1.0"; }
+    const juce::String getApplicationVersion() override { return "1.2.0"; }
     bool moreThanOneInstanceAllowed() override { return true; }
     void anotherInstanceStarted (const juce::String&) override {}
 

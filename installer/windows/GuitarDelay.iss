@@ -15,7 +15,7 @@
 #endif
 
 #define MyAppName "Sunset Delay"
-#define MyAppVersion "1.1.0"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "White Tea"
 #define MyAppId "{{B7E4C2A1-9F63-4D18-A5C0-6E8D3F1B72A4}"
 
@@ -25,7 +25,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=1.1.0.0
+VersionInfoVersion=1.2.0.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=Sunset Delay VST3 and standalone installer
 VersionInfoProductName={#MyAppName}

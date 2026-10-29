@@ -1,6 +1,6 @@
 # Writes Contents/Resources/moduleinfo.json for a Windows VST3 bundle.
 # Class IDs follow VST3Interface::jucePluginId() with the Windows byte order
-# (JUCE_WINDOWS). Manufacturer Wtea, plugin Gdly. VERSION defaults to 1.1.0.
+# (JUCE_WINDOWS). Manufacturer Wtea, plugin Gdly. VERSION defaults to 1.2.0.
 # A MinGW cross build cannot run JUCE's Windows manifest helper, so packaging
 # calls this script. A native Windows build already has the helper output.
 
@@ -9,7 +9,7 @@ if(NOT DEFINED BUNDLE_DIR OR BUNDLE_DIR STREQUAL "")
 endif()
 
 if(NOT DEFINED VERSION OR VERSION STREQUAL "")
-    set(VERSION "1.1.0")
+    set(VERSION "1.2.0")
 endif()
 
 get_filename_component(BUNDLE_DIR "${BUNDLE_DIR}" ABSOLUTE)

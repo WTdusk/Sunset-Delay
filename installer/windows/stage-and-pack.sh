@@ -11,7 +11,7 @@ DIST="${BUILD}/dist"
 ISS="${SOURCE}/installer/windows/GuitarDelay.iss"
 NSI="${SOURCE}/installer/windows/GuitarDelay.nsi"
 VERSION=$(sed -n 's/^project(GuitarDelay VERSION \([0-9.]*\).*/\1/p' "${SOURCE}/CMakeLists.txt" | head -1)
-VERSION=${VERSION:-1.1.0}
+VERSION=${VERSION:-1.2.0}
 SETUP_NAME="SunsetDelay-Setup-${VERSION}.exe"
 VST3_ZIP="SunsetDelay-VST3-${VERSION}.zip"
 
@@ -146,11 +146,20 @@ if ! unzip -l "${DIST}/${VST3_ZIP}" | grep -q 'Sunset Delay.vst3/Contents/'; the
     exit 1
 fi
 
+SUM_NAME="SunsetDelay-${VERSION}.sha256"
+(
+    cd "${DIST}"
+    sha256sum "${SETUP_NAME}" "${VST3_ZIP}" > "${SUM_NAME}"
+)
+
 echo "Installer: ${DIST}/${SETUP_NAME}"
 echo "VST3 zip: ${DIST}/${VST3_ZIP}"
+echo "Checksums: ${DIST}/${SUM_NAME}"
 if [[ -d /opt/cursor/artifacts ]]; then
     cp -f "${DIST}/${SETUP_NAME}" "/opt/cursor/artifacts/${SETUP_NAME}"
     cp -f "${DIST}/${VST3_ZIP}" "/opt/cursor/artifacts/${VST3_ZIP}"
+    cp -f "${DIST}/${SUM_NAME}" "/opt/cursor/artifacts/${SUM_NAME}"
     echo "Copied to /opt/cursor/artifacts/${SETUP_NAME}"
     echo "Copied to /opt/cursor/artifacts/${VST3_ZIP}"
+    echo "Copied to /opt/cursor/artifacts/${SUM_NAME}"
 fi
