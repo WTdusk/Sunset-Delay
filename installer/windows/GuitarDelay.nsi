@@ -1,7 +1,7 @@
 ﻿; NSIS fallback for the same install layout as GuitarDelay.iss.
 ; Used when Inno Setup's compiler is not available (makensis runs on Linux).
 ; Default folder: $COMMONFILES64\VST3  (C:\Program Files\Common Files\VST3)
-; Optional standalone: $PROGRAMFILES64\White Tea\Sunset Delay\Sunset Delay.exe
+; Optional standalone: $PROGRAMFILES64\WTdusk\Sunset Delay\Sunset Delay.exe
 ; Uninstaller is registered for Settings → Apps.
 
 Unicode True
@@ -22,9 +22,9 @@ ManifestDPIAware true
 Name "Sunset Delay"
 OutFile "${OUTFILE}"
 InstallDir "$COMMONFILES64\VST3"
-InstallDirRegKey HKLM "Software\White Tea\Sunset Delay" "Vst3Dir"
+InstallDirRegKey HKLM "Software\WTdusk\Sunset Delay" "Vst3Dir"
 RequestExecutionLevel admin
-BrandingText "White Tea"
+BrandingText "WTdusk"
 
 !define MUI_ABORTWARNING
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
@@ -53,27 +53,31 @@ BrandingText "White Tea"
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecVst} "Copies Sunset Delay.vst3 into the folder chosen on the next page."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecApp} "Installs Sunset Delay.exe under Program Files\White Tea\Sunset Delay and adds a Start menu shortcut."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecApp} "Installs Sunset Delay.exe under Program Files\WTdusk\Sunset Delay and adds a Start menu shortcut."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "VST3 plugin (required)" SecVst
   SectionIn RO
   RMDir /r "$INSTDIR\Guitar Delay.vst3"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Guitar Delay"
+  ; Previous publisher folder. Not the current author credit.
+  RMDir /r "$PROGRAMFILES64\White Tea\Sunset Delay"
+  RMDir "$PROGRAMFILES64\White Tea"
+  DeleteRegKey HKLM "Software\White Tea\Sunset Delay"
   SetOutPath "$INSTDIR\Sunset Delay.vst3"
   File /r "${PAYLOAD}/Sunset Delay.vst3/*.*"
 
-  CreateDirectory "$PROGRAMFILES64\White Tea\Sunset Delay"
-  WriteUninstaller "$PROGRAMFILES64\White Tea\Sunset Delay\Uninstall.exe"
+  CreateDirectory "$PROGRAMFILES64\WTdusk\Sunset Delay"
+  WriteUninstaller "$PROGRAMFILES64\WTdusk\Sunset Delay\Uninstall.exe"
 
   SetRegView 64
-  WriteRegStr HKLM "Software\White Tea\Sunset Delay" "Vst3Dir" "$INSTDIR"
+  WriteRegStr HKLM "Software\WTdusk\Sunset Delay" "Vst3Dir" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "DisplayName" "Sunset Delay"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "DisplayVersion" "1.2.0"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "Publisher" "White Tea"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "Publisher" "WTdusk"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "InstallLocation" "$INSTDIR\Sunset Delay.vst3"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "UninstallString" '"$PROGRAMFILES64\White Tea\Sunset Delay\Uninstall.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "QuietUninstallString" '"$PROGRAMFILES64\White Tea\Sunset Delay\Uninstall.exe" /S'
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "UninstallString" '"$PROGRAMFILES64\WTdusk\Sunset Delay\Uninstall.exe"'
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "QuietUninstallString" '"$PROGRAMFILES64\WTdusk\Sunset Delay\Uninstall.exe" /S'
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay" "NoRepair" 1
   ${GetSize} "$INSTDIR\Sunset Delay.vst3" "/S=0K" $0 $1 $2
@@ -81,17 +85,17 @@ Section "VST3 plugin (required)" SecVst
 SectionEnd
 
 Section "Standalone application" SecApp
-  SetOutPath "$PROGRAMFILES64\White Tea\Sunset Delay"
+  SetOutPath "$PROGRAMFILES64\WTdusk\Sunset Delay"
   File "${PAYLOAD}/Sunset Delay.exe"
   CreateDirectory "$SMPROGRAMS\Sunset Delay"
-  CreateShortcut "$SMPROGRAMS\Sunset Delay\Sunset Delay.lnk" "$PROGRAMFILES64\White Tea\Sunset Delay\Sunset Delay.exe"
-  CreateShortcut "$SMPROGRAMS\Sunset Delay\Uninstall Sunset Delay.lnk" "$PROGRAMFILES64\White Tea\Sunset Delay\Uninstall.exe"
-  WriteRegDWORD HKLM "Software\White Tea\Sunset Delay" "Standalone" 1
+  CreateShortcut "$SMPROGRAMS\Sunset Delay\Sunset Delay.lnk" "$PROGRAMFILES64\WTdusk\Sunset Delay\Sunset Delay.exe"
+  CreateShortcut "$SMPROGRAMS\Sunset Delay\Uninstall Sunset Delay.lnk" "$PROGRAMFILES64\WTdusk\Sunset Delay\Uninstall.exe"
+  WriteRegDWORD HKLM "Software\WTdusk\Sunset Delay" "Standalone" 1
 SectionEnd
 
 Section "un.Uninstall"
   SetRegView 64
-  ReadRegStr $0 HKLM "Software\White Tea\Sunset Delay" "Vst3Dir"
+  ReadRegStr $0 HKLM "Software\WTdusk\Sunset Delay" "Vst3Dir"
   ${If} $0 != ""
     RMDir /r "$0\Sunset Delay.vst3"
     RMDir /r "$0\Guitar Delay.vst3"
@@ -101,13 +105,13 @@ Section "un.Uninstall"
   Delete "$SMPROGRAMS\Sunset Delay\Uninstall Sunset Delay.lnk"
   RMDir "$SMPROGRAMS\Sunset Delay"
 
-  Delete "$PROGRAMFILES64\White Tea\Sunset Delay\Sunset Delay.exe"
-  Delete "$PROGRAMFILES64\White Tea\Sunset Delay\Uninstall.exe"
-  RMDir "$PROGRAMFILES64\White Tea\Sunset Delay"
-  RMDir "$PROGRAMFILES64\White Tea"
+  Delete "$PROGRAMFILES64\WTdusk\Sunset Delay\Sunset Delay.exe"
+  Delete "$PROGRAMFILES64\WTdusk\Sunset Delay\Uninstall.exe"
+  RMDir "$PROGRAMFILES64\WTdusk\Sunset Delay"
+  RMDir "$PROGRAMFILES64\WTdusk"
 
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Sunset Delay"
-  DeleteRegKey HKLM "Software\White Tea\Sunset Delay"
+  DeleteRegKey HKLM "Software\WTdusk\Sunset Delay"
 SectionEnd
 
 Function .onInit

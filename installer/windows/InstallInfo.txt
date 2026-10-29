@@ -1,5 +1,5 @@
 ﻿Sunset Delay 1.2.0
-White Tea
+WTdusk
 
 简体中文
 --------
@@ -19,7 +19,7 @@ White Tea
 
 再下一页可以勾选独立程序。它会装到：
 
-    C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+    C:\Program Files\WTdusk\Sunset Delay\Sunset Delay.exe
 
 并在开始菜单加入快捷方式。不需要独立程序时，取消勾选即可。
 
@@ -42,7 +42,7 @@ That default is the folder most Windows hosts scan. Rescan plugins in the host. 
 
 The page after that can also install the standalone app at:
 
-    C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+    C:\Program Files\WTdusk\Sunset Delay\Sunset Delay.exe
 
 with a Start menu shortcut. Clear the checkbox to skip it.
 
