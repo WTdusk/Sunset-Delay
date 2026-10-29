@@ -4,7 +4,7 @@
 ;   C:\Program Files\Common Files\VST3\Sunset Delay.vst3
 ; The directory page can point that bundle somewhere else.
 ; The optional standalone app always goes to:
-;   C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+;   C:\Program Files\WTdusk\Sunset Delay\Sunset Delay.exe
 ; Uninstall is registered with Add/Remove Programs (Settings → Apps).
 
 #ifndef PayloadDir
@@ -16,7 +16,7 @@
 
 #define MyAppName "Sunset Delay"
 #define MyAppVersion "1.2.0"
-#define MyAppPublisher "White Tea"
+#define MyAppPublisher "WTdusk"
 #define MyAppId "{{B7E4C2A1-9F63-4D18-A5C0-6E8D3F1B72A4}"
 
 [Setup]
@@ -48,7 +48,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
 MinVersion=10.0
 UninstallDisplayName={#MyAppName}
-UninstallFilesDir={autopf}\White Tea\Sunset Delay
+UninstallFilesDir={autopf}\WTdusk\Sunset Delay
 CloseApplications=yes
 RestartApplications=no
 SetupLogging=yes
@@ -80,18 +80,20 @@ Name: "standalone"; Description: "{cm:StandaloneTask}"; GroupDescription: "{cm:E
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\Guitar Delay.vst3"
+; Previous publisher folder. Not the current author credit.
+Type: filesandordirs; Name: "{autopf}\White Tea\Sunset Delay"
 Type: files; Name: "{autopf}\White Tea\Guitar Delay\Guitar Delay.exe"
 
 [Files]
 Source: "{#PayloadDir}\Sunset Delay.vst3\*"; DestDir: "{app}\Sunset Delay.vst3"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#PayloadDir}\Sunset Delay.exe"; DestDir: "{autopf}\White Tea\Sunset Delay"; Flags: ignoreversion skipifsourcedoesntexist; Tasks: standalone
+Source: "{#PayloadDir}\Sunset Delay.exe"; DestDir: "{autopf}\WTdusk\Sunset Delay"; Flags: ignoreversion skipifsourcedoesntexist; Tasks: standalone
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{autopf}\White Tea\Sunset Delay\Sunset Delay.exe"; Tasks: standalone
+Name: "{group}\{#MyAppName}"; Filename: "{autopf}\WTdusk\Sunset Delay\Sunset Delay.exe"; Tasks: standalone
 Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\Sunset Delay.vst3"
 Type: filesandordirs; Name: "{app}\Guitar Delay.vst3"
-Type: dirifempty; Name: "{autopf}\White Tea\Sunset Delay"
-Type: dirifempty; Name: "{autopf}\White Tea"
+Type: dirifempty; Name: "{autopf}\WTdusk\Sunset Delay"
+Type: dirifempty; Name: "{autopf}\WTdusk"

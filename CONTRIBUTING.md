@@ -1,8 +1,8 @@
 # Contributing to Sunset Delay
 
-Sunset Delay is a guitar delay by White Tea. Issues and small, focused changes are welcome. The product name stays **Sunset Delay**. The manufacturer stays **White Tea**. CMake targets stay `GuitarDelay` so existing build scripts keep working.
+Sunset Delay is a guitar delay by WTdusk. Issues and small, focused changes are welcome. The product name stays **Sunset Delay**. The manufacturer stays **WTdusk**. CMake targets stay `GuitarDelay` so existing build scripts keep working.
 
-Sunset Delay 是 White Tea 的吉他延迟。欢迎针对具体问题的修改。产品名保持 **Sunset Delay**，厂商保持 **White Tea**。CMake 目标名保持 `GuitarDelay`，现有构建脚本不用改。
+Sunset Delay 是 WTdusk 的吉他延迟。欢迎针对具体问题的修改。产品名保持 **Sunset Delay**，厂商保持 **WTdusk**。CMake 目标名保持 `GuitarDelay`，现有构建脚本不用改。
 
 ## Build and test
 

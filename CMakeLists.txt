@@ -44,8 +44,8 @@ target_link_libraries(GuitarDelayDsp
 )
 
 juce_add_plugin(GuitarDelay
-    COMPANY_NAME "White Tea"
-    BUNDLE_ID com.whitetea.guitardelay
+    COMPANY_NAME "WTdusk"
+    BUNDLE_ID com.wtdusk.guitardelay
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE

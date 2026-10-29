@@ -1,10 +1,10 @@
 # Sunset Delay
 
-Sunset Delay is a guitar delay from White Tea, version 1.2.0. Three engines sit behind one faceplate: tape, analog bucket-brigade, and digital. It is for an electric guitar in front of an amp. Repeats sit behind the pick, and feedback dies out instead of running away.
+Sunset Delay is a guitar delay from WTdusk, version 1.2.0. Three engines sit behind one faceplate: tape, analog bucket-brigade, and digital. It is for an electric guitar in front of an amp. Repeats sit behind the pick, and feedback dies out instead of running away.
 
 Load it as an **insert effect** on an audio track. Audio comes in. Dry plus delayed wet goes out. The VST3 category is `Fx|Delay`, so the host keeps the track input connected. The default mix is 28%, and the dry pick stays in front. Mix at zero is the full dry guitar. Bypass passes the dry signal and lets repeats already in the delay line ring out.
 
-Sunset Delay 是 White Tea 的电吉他延迟，版本 1.2.0。面板后面是三套独立引擎：磁带、模拟斗链（bucket-brigade）、数字。它是给音箱前面的电吉他用的。重复落在拨弦后面，反馈会自己衰减，而不是越叠越响。
+Sunset Delay 是 WTdusk 的电吉他延迟，版本 1.2.0。面板后面是三套独立引擎：磁带、模拟斗链（bucket-brigade）、数字。它是给音箱前面的电吉他用的。重复落在拨弦后面，反馈会自己衰减，而不是越叠越响。
 
 请把它当作音轨上的**插入效果**来加载。声音进去，出来的是干声加上延迟后的湿声。VST3 类别是 `Fx|Delay`，宿主会保持音轨的音频输入。默认混音 28%，干声仍在前面。混音拧到 0 是完全干声。旁路会放回干声，并让已经写进延迟线的重复自己响完。
 
@@ -42,7 +42,7 @@ C:\Program Files\Common Files\VST3
 The installer creates `Sunset Delay.vst3` inside the folder you chose. The optional standalone, checked by default, goes here, with a Start menu shortcut:
 
 ```text
-C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+C:\Program Files\WTdusk\Sunset Delay\Sunset Delay.exe
 ```
 
 Clear that checkbox if you only want the plugin.
@@ -56,7 +56,7 @@ C:\Program Files\Common Files\VST3
 安装程序会在你选的文件夹里创建 `Sunset Delay.vst3`。可选的独立程序默认勾选，装到下面的位置，并在开始菜单放上快捷方式：
 
 ```text
-C:\Program Files\White Tea\Sunset Delay\Sunset Delay.exe
+C:\Program Files\WTdusk\Sunset Delay\Sunset Delay.exe
 ```
 
 只要插件的话，取消这个勾选。
@@ -311,10 +311,10 @@ On one Release build, stereo, 256-sample blocks, as a fraction of one core: tape
 
 ## License / 许可
 
-The Sunset Delay source in this repository is [MIT](LICENSE), copyright White Tea. JUCE is not in the tree and is not MIT. It is fetched at configure time and is available under the [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) or a [commercial JUCE licence](https://juce.com/juce-7-licence/).
+The Sunset Delay source in this repository is [MIT](LICENSE), copyright WTdusk. JUCE is not in the tree and is not MIT. It is fetched at configure time and is available under the [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) or a [commercial JUCE licence](https://juce.com/juce-7-licence/).
 
 A binary built with the AGPL edition of JUCE is a combined work. Distributing that binary means complying with the AGPL, including offering the corresponding source to the people who receive it. A commercial JUCE licence is what allows distributing the binary on terms other than the AGPL. The MIT grant covers the plugin source here. It does not grant rights in JUCE.
 
-本仓库里的 Sunset Delay 源代码以 [MIT](LICENSE) 许可发布，版权归 White Tea。JUCE 不在仓库中，也不适用 MIT。构建时会单独获取 JUCE，其许可是 [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) 或 [JUCE 商业许可](https://juce.com/juce-7-licence/)。
+本仓库里的 Sunset Delay 源代码以 [MIT](LICENSE) 许可发布，版权归 WTdusk。JUCE 不在仓库中，也不适用 MIT。构建时会单独获取 JUCE，其许可是 [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) 或 [JUCE 商业许可](https://juce.com/juce-7-licence/)。
 
 用 AGPL 版 JUCE 编出来的程序，和 JUCE 链接在一起，分发时就要遵守 AGPL，包括向收到程序的人提供对应源码。若要按 AGPL 以外的条款分发，需要 JUCE 商业许可。这里的 MIT 只覆盖本仓库的插件源码，不包含对 JUCE 的任何授权。

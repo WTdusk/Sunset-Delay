@@ -1276,7 +1276,7 @@ void GuitarDelayEditor::paint (juce::Graphics& g)
 
     g.setColour (kMuted);
     g.setFont (softFont (11.0f));
-    g.drawText ("WHITE TEA", titleArea.reduced (4, 0).removeFromTop (14), juce::Justification::bottomLeft, false);
+    g.drawText ("WTdusk", titleArea.reduced (4, 0).removeFromTop (14), juce::Justification::bottomLeft, false);
 
     g.setColour (kInk);
     g.setFont (softFont (22.0f, true));

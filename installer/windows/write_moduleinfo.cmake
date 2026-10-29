@@ -1,6 +1,7 @@
 # Writes Contents/Resources/moduleinfo.json for a Windows VST3 bundle.
 # Class IDs follow VST3Interface::jucePluginId() with the Windows byte order
-# (JUCE_WINDOWS). Manufacturer Wtea, plugin Gdly. VERSION defaults to 1.2.0.
+# (JUCE_WINDOWS). The vendor string is WTdusk. The 4-character class id
+# still uses Wtea and plugin code Gdly. VERSION defaults to 1.2.0.
 # A MinGW cross build cannot run JUCE's Windows manifest helper, so packaging
 # calls this script. A native Windows build already has the helper output.
 
@@ -22,7 +23,7 @@ set(json "{
   \"Name\": \"Sunset Delay\",
   \"Version\": \"${VERSION}\",
   \"Factory Info\": {
-    \"Vendor\": \"White Tea\",
+    \"Vendor\": \"WTdusk\",
     \"URL\": \"\",
     \"E-Mail\": \"\",
     \"Flags\": {
@@ -36,7 +37,7 @@ set(json "{
       \"CID\": \"01EFCDAB8291EBFA5774656147646C79\",
       \"Category\": \"Audio Module Class\",
       \"Name\": \"Sunset Delay\",
-      \"Vendor\": \"White Tea\",
+      \"Vendor\": \"WTdusk\",
       \"Version\": \"${VERSION}\",
       \"SDKVersion\": \"VST 3.8.0\",
       \"Sub Categories\": [\"Fx\", \"Delay\"],
@@ -48,7 +49,7 @@ set(json "{
       \"CID\": \"01EFCDAB3412CDAB5774656147646C79\",
       \"Category\": \"Component Controller Class\",
       \"Name\": \"Sunset Delay\",
-      \"Vendor\": \"White Tea\",
+      \"Vendor\": \"WTdusk\",
       \"Version\": \"${VERSION}\",
       \"SDKVersion\": \"VST 3.8.0\",
       \"Sub Categories\": [\"Fx\", \"Delay\"],
